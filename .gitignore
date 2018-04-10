@@ -1,1 +1,12 @@
 /#*#
+/*~
+/*.o
+/core
+/.depend
+/.*.cmd
+/*.order
+/*.symvers
+/*.ko
+/*.mod.c
+
+#*.o *~ core .depend .*.cmd *.order *.symvers *.ko *.mod.c
