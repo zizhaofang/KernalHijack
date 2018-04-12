@@ -1,4 +1,5 @@
-gcc -o sneaky_process sneaky_process.c
+sneaky_process: sneaky_process.c
+	gcc -o sneaky_process sneaky_process.c
 
 ifeq ($(KERNELRELEASE),)  
 
