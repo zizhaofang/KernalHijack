@@ -1,6 +1,3 @@
-sneaky_process: sneaky_process.c
-	gcc -o sneaky_process sneaky_process.c
-
 ifeq ($(KERNELRELEASE),)  
 
 KERNELDIR ?= /lib/modules/$(shell uname -r)/build 

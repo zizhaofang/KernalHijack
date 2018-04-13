@@ -20,7 +20,7 @@ int main() {
   sprintf(cpid, "%d", mypid);
   strcat(command, cpid);
   system(command);
-  while(true) {
+  while(1) {
     char c = getchar();
     if(c == 'q') {
       break;
