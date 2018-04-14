@@ -8,7 +8,7 @@
 #include <linux/kallsyms.h>
 #include <asm/page.h>
 #include <asm/cacheflush.h>
-#include <string.h>
+#include <linux/string.h>
 
 struct linux_dirent {
   long           d_ino;
