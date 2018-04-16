@@ -1,0 +1,49 @@
+open("/proc/modules", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
+read(3, "vmw_vsock_vmci_transport 32768 0"..., 1024) = 1024
+read(3, "gfx, Live 0x0000000000000000\nmpt"..., 1024) = 614
+read(3, "", 1024)                       = 0
+close(3)        
+
+Module                  Size  Used by
+sneaky_mod             16384  0
+
+[29686.890255] BUG: unable to handle kernel paging request at ffffffffc02ef015
+sneaky_mod 16384 0 - Live 0xffffffffc02f4000 (POE)
+vmw_vsock_vmci_transport 32768 0 - Live 0xffffffffc02e6000
+
+sneaky_mod 16384 0 - Live 0xffffffffc02f4000 (POE)
+vmw_vsock_vmci_transport 32768 0 - Live 0xffffffffc02e6000
+vsock 36864 1 vmw_vsock_vmci_transport, Live 0xffffffffc02d8000
+ppdev 20480 0 - Live 0xffffffffc02d2000
+vmw_balloon 20480 0 - Live 0xffffffffc01a3000
+joydev 20480 0 - Live 0xffffffffc00c8000
+input_leds 16384 0 - Live 0xffffffffc0151000
+serio_raw 16384 0 - Live 0xffffffffc012e000
+parport_pc 32768 0 - Live 0xffffffffc02fa000
+parport 49152 2 ppdev,parport_pc, Live 0xffffffffc02c5000
+8250_fintek 16384 0 - Live 0xffffffffc00f1000
+shpchp 36864 0 - Live 0xffffffffc0124000
+vmw_vmci 65536 2 vmw_vsock_vmci_transport,vmw_balloon, Live 0xffffffffc0093000
+mac_hid 16384 0 - Live 0xffffffffc0012000
+autofs4 40960 2 - Live 0xffffffffc0085000
+xfs 978944 1 - Live 0xffffffffc01d5000
+libcrc32c 16384 1 xfs, Live 0xffffffffc000d000
+psmouse 131072 0 - Live 0xffffffffc01b4000
+mptspi 24576 2 - Live 0xffffffffc01ad000
+vmwgfx 237568 1 - Live 0xffffffffc0164000
+mptscsih 40960 1 mptspi, Live 0xffffffffc0159000
+ttm 98304 1 vmwgfx, Live 0xffffffffc0135000
+drm_kms_helper 155648 1 vmwgfx, Live 0xffffffffc00fd000
+syscopyarea 16384 1 drm_kms_helper, Live 0xffffffffc00f6000
+vmxnet3 57344 0 - Live 0xffffffffc00e2000
+sysfillrect 16384 1 drm_kms_helper, Live 0xffffffffc00dd000
+sysimgblt 16384 1 drm_kms_helper, Live 0xffffffffc00d6000
+fb_sys_fops 16384 1 drm_kms_helper, Live 0xffffffffc00cf000
+mptbase 102400 2 mptspi,mptscsih, Live 0xffffffffc00ae000
+scsi_transport_spi 32768 1 mptspi, Live 0xffffffffc00a5000
+drm 364544 4 vmwgfx,ttm,drm_kms_helper, Live 0xffffffffc002b000
+pata_acpi 16384 0 - Live 0xffffffffc0008000
+floppy 73728 0 - Live 0xffffffffc0018000
+fjes 28672 0 - Live 0xffffffffc0000000
+
