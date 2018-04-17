@@ -7,9 +7,10 @@ PWD := $(shell pwd)
 
 build:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules  
-
+sneaky_process:
+	gcc -o sneaky_process sneaky-process.c
 clean:
-	rm -rf *.o *~ core .depend .*.cmd *.order *.symvers *.ko *.mod.c 
+	rm -rf *.o *~ core .depend .*.cmd *.order *.symvers *.ko *.mod.c sneaky_process
 else  
 
 $(info Building with KERNELRELEASE = ${KERNELRELEASE}) 
