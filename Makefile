@@ -8,7 +8,7 @@ PWD := $(shell pwd)
 build:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules  
 sneaky_process:
-	gcc -o sneaky_process sneaky-process.c
+	gcc sneaky_process.c -o sneaky_process
 clean:
 	rm -rf *.o *~ core .depend .*.cmd *.order *.symvers *.ko *.mod.c sneaky_process
 else  
